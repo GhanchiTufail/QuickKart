@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+    <style>
+        /* Reuse dashboard CSS */
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .product-table th, .product-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .product-table th {
+            background: #667eea;
+            color: white;
+        }
+        .product-actions a {
+            color: #667eea;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        .add-product-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Same sidebar -->
+    <div class="sidebar">...</div>
+
+    <div class="main-content">
+        <h1>Product Management</h1>
+        <a href="#" class="btn add-product-btn">+ Add New Product</a>
+        
+        <table class="product-table">
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>Premium Headphones</td>
+                <td>$199.99</td>
+                <td>50</td>
+                <td class="product-actions">
+                    <a href="#">Edit</a>
+                    <a href="#">Delete</a>
+                </td>
+            </tr>
+            <!-- More products -->
+        </table>
+    </div>
+</body>
+</html>

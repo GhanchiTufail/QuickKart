@@ -1,1 +1,1 @@
-pip install fastapi uvicorn sqlalchemy jinja2 python-multipart psycopg2
+pip install fastapi uvicorn sqlalchemy jinja2 python-multipart psycopg2 passlib[bcrypt]

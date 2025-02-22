@@ -6,10 +6,14 @@ from source.config.database import get_db
 from source.schemas.admin_schema import AdminSchema
 from source.models.admin import Admin
 from source.modules.admin import admin_route
+from source.modules.user import user_route
+from source.modules.seller import seller_route
 
 app = FastAPI()
 
 app.include_router(admin_route.router)
+app.include_router(user_route.router)
+app.include_router(seller_route.router)
 
 # # Create database tables
 # # User.metadata.create_all(bind=engine)

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders</title>
+    <style>
+        .order-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .order-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .status-pending { background: #ffd700; }
+        .status-shipped { background: #90EE90; }
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Same sidebar -->
+    <div class="sidebar">...</div>
+
+    <div class="main-content">
+        <h1>Order Management</h1>
+        
+        <div class="order-card">
+            <h3>Order #12345</h3>
+            <p>Customer: Alice Johnson</p>
+            <p>Date: 2023-08-15</p>
+            <p>Total: $299.99</p>
+            <div class="order-status status-pending">Pending</div>
+            <select class="status-select">
+                <option>Pending</option>
+                <option>Shipped</option>
+                <option>Delivered</option>
+            </select>
+        </div>
+        <!-- More orders -->
+    </div>
+</body>
+</html>
