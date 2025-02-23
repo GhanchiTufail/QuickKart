@@ -20,7 +20,7 @@ def create_access_token(email: str, role: str):
     payload = {
         "email": email,
         "role": role,
-        "exp": expire  # Adding expiration time
+        # "exp": expire  # Adding expiration time
     }
     try:
         encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -108,6 +108,7 @@ async def get_current_seller(
     if seller is None:
         raise credentials_exception
         
+    return seller
     return {
         "id":seller.id,
         "name":seller.name,

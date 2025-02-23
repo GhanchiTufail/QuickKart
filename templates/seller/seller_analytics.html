@@ -31,11 +31,26 @@
             justify-content: center;
             color: #666;
         }
+        .primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 8px;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
     <!-- Same sidebar -->
-    <div class="sidebar">...</div>
+    <div class="sidebar">
+        <h2>Seller Panel</h2>
+        <ul>
+            <li><a href="/seller/home">Dashboard</a></li>
+            <li><a href="/seller/profile">Profile</a></li>
+            <li><a href="/seller/product">Products</a></li>
+            <li><a href="/seller/order">Orders</a></li>
+            <li class="primary"><a href="/seller/analytics">Store Analytics</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
 
     <div class="main-content">
         <h1>Store Analytics</h1>

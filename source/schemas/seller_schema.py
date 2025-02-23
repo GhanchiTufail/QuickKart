@@ -8,3 +8,4 @@ class SellerSchema(SellerLoginSchema):
     name: str
     phone: str
     store: str
+    category: str

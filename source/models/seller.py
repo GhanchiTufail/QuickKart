@@ -1,6 +1,7 @@
-from sqlalchemy import Column, func, Integer, String, Boolean, DateTime, Float
+from sqlalchemy import Column, func, Integer, String, Boolean, DateTime, Float, Enum
 from sqlalchemy.orm import relationship
 from source.config.database import Base,engine
+from source.utils.categories import CategoryEnum
 
 class Seller(Base):
     __tablename__ = "sellers"
@@ -14,10 +15,12 @@ class Seller(Base):
     is_verified = Column(Boolean, default=False)  # New field for seller verification
     rating = Column(Float, nullable=True)  # Optional field for seller rating
     balance = Column(Float, default=0.0)  # Earnings/balance
+    category = Column(Enum(CategoryEnum), nullable=False)
+    is_banned = Column(Boolean, default=False)
 
     created_at = Column(DateTime, default=func.now())  # Auto-generate timestamp
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())  # Auto-update timestamp
 
-    #products = relationship("Product", back_populates="seller")  # Relationship with Product model
+    products = relationship("Product", back_populates="seller")  # Relationship with Product model
 
 Base.metadata.create_all(bind=engine)

@@ -25,5 +25,3 @@ class User(Base):
     # rental_orders = relationship("RentalOrder", back_populates="user")
 
 Base.metadata.create_all(bind=engine)
-# Indexes
-Index("idx_user_email", User.email)
