@@ -5,6 +5,7 @@ from source.schemas.user_schema import UserLoginSchema, UserSchema
 from source.config.database import get_db
 from source.utils.token import get_current_user
 from source.modules.user.user_controller import login_user_controller, create_user_controller
+from source.models.user import User
 
 router = APIRouter(prefix="/user", tags=["User"])
 templates = Jinja2Templates(directory="templates")
@@ -31,5 +32,5 @@ async def login_seller(request: Request, user: UserLoginSchema = Form(...), db: 
 
 # user dashboard (protected)
 @router.get("/home")
-async def admin_dashboard(request: Request,data: dict = Depends(get_current_user)):
-    return templates.TemplateResponse("user/home.html",{"request": request, "email": data["email"]})
+async def admin_dashboard(request: Request,user: User  = Depends(get_current_user)):
+    return templates.TemplateResponse("user/home.html",{"request": request, "data": user})

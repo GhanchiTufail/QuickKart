@@ -6,7 +6,9 @@ from source.config.database import get_db
 from source.models.admin import Admin
 from source.utils.hashing import verify_password, hash_password
 from source.utils.token import create_access_token, get_current_admin
-from source.schemas.admin_schema import AdminSchema
+from source.schemas.admin_schema import AdminSchema, SellerPagination, UserPagination
+from source.models.seller import Seller
+from source.models.user import User
 
 templates = Jinja2Templates(directory="templates")
 
@@ -36,3 +38,53 @@ def login_admin_service(admin: AdminSchema = Form(...), db: Session = Depends(ge
             return access_token
     except:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="error while creating admin token")
+
+# updated
+def seller_list_service(seller: SellerPagination,db: Session):
+    query = db.query(Seller)
+    condition = []
+    if seller.category:
+        condition.append(Seller.category == seller.category)
+    if seller.phone:
+        condition.append(Seller.phone == seller.phone)
+    if seller.email:
+        condition.append(Seller.email == seller.email)
+    if seller.name:
+        condition.append(Seller.name == seller.name)
+    if seller.store:
+        condition.append(Seller.store_name == seller.store)
+    offset = (seller.page - 1) * seller.limit
+    query = query.filter(*condition)
+    total_user = query.count()
+    query = query.offset(offset).limit(seller.limit)
+    query = query.with_entities(
+        Seller.id,
+        Seller.name,
+        Seller.email,
+        Seller.phone,
+        Seller.store_name,
+        Seller.category,
+        Seller.is_banned
+    )
+    return query,total_user
+
+def user_list_service(user: UserPagination,db: Session):
+    query = db.query(User)
+    condition = []
+    if user.phone:
+        condition.append(User.phone == user.phone)
+    if user.email:
+        condition.append(User.email == user.email)
+    if user.name:
+        condition.append(User.name == user.name)
+    offset = (user.page - 1) * user.limit
+    query = query.filter(*condition)
+    total_user = query.count()
+    query = query.offset(offset).limit(user.limit)
+    query = query.with_entities(
+        User.id,
+        User.name,
+        User.email,
+        User.phone
+    )
+    return query,total_user

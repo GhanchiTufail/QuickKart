@@ -3,8 +3,8 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from source.config.database import get_db
 from source.utils.token import get_current_admin
-from source.schemas.admin_schema import AdminSchema
-from source.modules.admin.admin_controller import create_admin_controller, login_admin_controller
+from source.schemas.admin_schema import AdminSchema, SellerPagination, UserPagination
+from source.modules.admin.admin_controller import create_admin_controller, login_admin_controller, seller_list_controller
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 templates = Jinja2Templates(directory="templates")
@@ -34,3 +34,7 @@ async def login_admin(request: Request, admin: AdminSchema = Form(...), db: Sess
 @router.get("/admin_dashboard")
 async def admin_dashboard(request: Request,email: dict = Depends(get_current_admin)):
     return templates.TemplateResponse("admin_dashboard.html",{"request": request, "email": email["email"]})
+
+@router.get("/seller/list")
+def seller_list(seller: SellerPagination = Depends() ,db: Session = Depends(get_db)):
+    return seller_list_controller(seller,db)

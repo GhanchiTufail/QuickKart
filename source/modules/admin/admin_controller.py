@@ -6,9 +6,9 @@ from source.config.database import get_db
 from source.models.admin import Admin
 from source.utils.hashing import verify_password, hash_password
 from source.utils.token import create_access_token, get_current_admin
-from source.schemas.admin_schema import AdminSchema
-from source.modules.admin.admin_service import create_admin_service, login_admin_service
-
+from source.schemas.admin_schema import AdminSchema, SellerPagination, UserPagination
+from source.modules.admin.admin_service import create_admin_service, login_admin_service, seller_list_service, user_list_service
+from math import ceil
 templates = Jinja2Templates(directory="templates")
 
 def create_admin_controller(request: Request, admin: AdminSchema, db: Session):
@@ -33,3 +33,26 @@ def login_admin_controller(request: Request, admin: AdminSchema, db: Session):
             "admin_gateway/login.html",
             {"request": request, "message": "Incorrect email or password"},
         )
+    
+# updated
+def seller_list_controller(seller:SellerPagination,db: Session):
+    query,users = seller_list_service(seller,db)
+    pages = ceil(users/seller.limit)
+    sellers = []
+    for data in query:
+        sellers.append({
+            "id":str(data.id),
+            "name":data.name,
+            "email":data.email,
+            "phone":data.phone,
+            "store":data.store_name,
+            "category":data.category,
+            "status":str(data.is_banned)
+        })
+    return {
+        "pages":pages,
+        "users":users,
+        "data":sellers}
+
+def user_list_controller(user: UserPagination):
+    pass

@@ -9,3 +9,4 @@ class SellerSchema(SellerLoginSchema):
     phone: str
     store: str
     category: str
+    
