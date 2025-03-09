@@ -1,3 +1,9 @@
+# Ignore all __pycache__ directories
 __pycache__/
-venv/
-C:\Users\Tufail\Desktop\SoftwareProject\quickkart\fastapiDemoCode\source\modules\user\__pycache__/
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+venv

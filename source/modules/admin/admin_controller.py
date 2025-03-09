@@ -7,15 +7,16 @@ from source.models.admin import Admin
 from source.utils.hashing import verify_password, hash_password
 from source.utils.token import create_access_token, get_current_admin
 from source.schemas.admin_schema import AdminSchema, SellerPagination, UserPagination
-from source.modules.admin.admin_service import create_admin_service, login_admin_service, seller_list_service, user_list_service
+from source.modules.admin.admin_service import create_admin_service, login_admin_service, seller_list_service, user_list_service, product_list_service, seller_ban_service
 from math import ceil
+
 templates = Jinja2Templates(directory="templates")
 
 def create_admin_controller(request: Request, admin: AdminSchema, db: Session):
     query = create_admin_service(request,admin,db)
     if query is False:
         return templates.TemplateResponse(
-            "admin_gateway/signup.html",
+            "admin/signup.html",
             {"request": request, "message": "Email already exists"},
         )
     if query is True:
@@ -30,7 +31,7 @@ def login_admin_controller(request: Request, admin: AdminSchema, db: Session):
         return response
     else:
         return templates.TemplateResponse(
-            "admin_gateway/login.html",
+            "admin/login.html",
             {"request": request, "message": "Incorrect email or password"},
         )
     
@@ -52,7 +53,8 @@ def seller_list_controller(seller:SellerPagination,db: Session):
     return {
         "pages":pages,
         "users":users,
-        "data":sellers}
+        "data":query}
 
-def user_list_controller(user: UserPagination):
-    pass
+def user_list_controller(user: UserPagination, db: Session):
+    query = user_list_service(user, db)
+    

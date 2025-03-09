@@ -1,11 +1,15 @@
 from fastapi import APIRouter, Request, Depends, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from source.schemas.user_schema import UserLoginSchema, UserSchema
 from source.config.database import get_db
 from source.utils.token import get_current_user
-from source.modules.user.user_controller import login_user_controller, create_user_controller
+from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller
 from source.models.user import User
+from source.models.product import Product
+from source.models.cart import Cart
+from source.utils.dependency import get_all_products
 
 router = APIRouter(prefix="/user", tags=["User"])
 templates = Jinja2Templates(directory="templates")
@@ -30,7 +34,55 @@ async def login_seller(request: Request, user: UserLoginSchema = Form(...), db: 
     return login_user_controller(request, user, db)
 
 
-# user dashboard (protected)
+# User Dashboard
 @router.get("/home")
-async def admin_dashboard(request: Request,user: User  = Depends(get_current_user)):
-    return templates.TemplateResponse("user/home.html",{"request": request, "data": user})
+async def user_dashboard(request: Request, user: User = Depends(get_current_user), product: Product = Depends(get_all_products)):
+    #product_list = 
+    return templates.TemplateResponse("user/home.html", {"request": request, "user":user, "product":product})
+
+@router.post("/cart/{product_id}/{quantity}")
+async def add_to_cart(request: Request, product_id: int,quantity: int, user: User = Depends(get_current_user), product: Product = Depends(get_all_products), db: Session = Depends(get_db)):
+    # add_to_cart_controller(request, product_id, quantity, user.id, db=db)
+    print("1")
+    add_to_cart_controller(request,product_id,user.id,db,quantity)
+    return RedirectResponse(url="/user/home", status_code=303)
+
+
+@router.get("/cart")
+async def show_cart(request: Request, user: User = Depends(get_current_user), product: Product = Depends(get_all_products),db: Session = Depends(get_db)):
+    query = db.query(Cart).filter(user.id == Cart.user_id).all()
+    cart_list = []
+    total = 0
+    for i in query:
+        prd = db.query(Product).filter( Product.id == i.product_id).first()
+        total += i.amount
+        cart_list.append({
+                "product_name": prd.name,  # assuming field is named 'name'
+                "product_image": prd.image,  # assuming field is named 'image'
+                "product_description": prd.description,  # assuming field is named 'description'
+                "quantity": i.quantity,  # adjust field name if needed
+                "price": i.amount 
+        })
+        # print(cart_list(1))
+    # product = show_cart_controller(request,user, db)
+    return templates.TemplateResponse("user/cart.html", {"request": request, "user":user, "cart":cart_list, "total":total})
+
+
+@router.post("/checkout/{id}")
+async def checkout(request: Request, id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    query = db.query(Cart).filter(user.id == Cart.user_id).all()
+    cart_list = []
+    total = 0
+    for i in query:
+        prd = db.query(Product).filter( Product.id == i.product_id).first()
+        total += i.amount
+        cart_list.append({
+                "product_name": prd.name,  # assuming field is named 'name'
+                "product_image": prd.image,  # assuming field is named 'image'
+                "product_description": prd.description,  # assuming field is named 'description'
+                "quantity": i.quantity,  # adjust field name if needed
+                "price": i.amount 
+        })
+        # print(cart_list(1))
+    # product = show_cart_controller(request,user, db)
+    return templates.TemplateResponse("user/checkout.html", {"request": request, "user":user, "cart":cart_list, "total":total})

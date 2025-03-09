@@ -34,3 +34,11 @@ class ProductSchema(BaseModel):
             daily_rate=daily_rate,
             brand=brand,
         )
+
+class OrderItemSchema(BaseModel):
+    product_id: int
+    quantity: int
+
+class CheckoutSchema(BaseModel):
+    user_id: int
+    cart_items: list[OrderItemSchema]

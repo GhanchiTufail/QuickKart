@@ -22,6 +22,8 @@ def create_seller_controller(request: Request, seller: SellerSchema, db: Session
 
 def login_seller_controller(request: Request, seller: SellerLoginSchema, db: Session):
     access_token = login_seller_service(seller, db)
+    if access_token is None:
+        return templates.TemplateResponse("seller/seller_ban.html",{"request":request})
     if access_token:
         response = RedirectResponse(url="/seller/home", status_code=303)
         response.set_cookie(key="access_token", value=access_token)

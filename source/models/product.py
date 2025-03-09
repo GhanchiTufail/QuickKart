@@ -10,7 +10,7 @@ class Product(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     description = Column(Text)
-    image = Column(LargeBinary,nullable=True)
+    image = Column(String, nullable=True)
     price = Column(Float, nullable=False)
     category = Column(Enum(CategoryEnum))
     sub_category = Column(String(100), nullable=False)

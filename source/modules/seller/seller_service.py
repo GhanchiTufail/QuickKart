@@ -26,11 +26,10 @@ def create_seller_service(seller: SellerSchema, db: Session):
     except:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="error in checking if seller exist or not")
     try:
-        new_seller = Seller(name=seller.name, email=seller.email, password=hash_password(seller.password), store_name = seller.store, phone = seller.phone, category = seller.category)
+        new_seller = Seller(name=seller.name, email=seller.email, password=hash_password(seller.password), store_name = seller.store, phone = seller.phone, category = seller.category, rating = 0)
         db.add(new_seller)
         db.commit()
         db.refresh(new_seller)
-        return True
     except HTTPException as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error in creating seller str{e}")
 
@@ -38,6 +37,8 @@ def create_seller_service(seller: SellerSchema, db: Session):
 def login_seller_service(seller: SellerLoginSchema, db: Session):
     try:
         seller_data = db.query(Seller).filter(Seller.email == seller.email).first()
+        if seller_data.is_banned == True:
+            return None
         if seller_data and verify_password(seller.password, seller_data.password):
             access_token = create_access_token(seller.email, "seller")
             return access_token

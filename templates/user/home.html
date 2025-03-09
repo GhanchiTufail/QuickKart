@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechBazaar - Modern eCommerce</title>
+    <title>QuickKart - Modern eCommerce</title>
     <style>
         /* === Global Styles === */
         :root {
@@ -214,17 +214,49 @@
                 gap: 1rem;
             }
         }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .quantity-controls button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .quantity-controls button:hover {
+            background: var(--secondary);
+        }
+
+        .quantity-controls input {
+            width: 50px;
+            text-align: center;
+            font-size: 16px;
+            padding: 5px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+        }
+
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        <div class="logo">TechBazaar</div>
+        <div class="logo">QuickKart</div>
         <input type="text" class="search-bar" placeholder="Search products...">
         <nav>
             <a href="/">Home</a>
             <a href="/categories">Categories</a>
-            <a href="/cart">Cart</a>
+            <a href="/user/cart">Cart</a>
             <a href="/account">Account</a>
         </nav>
     </header>
@@ -244,56 +276,25 @@
         </div>
         <div class="product-grid">
             <!-- Row 1 -->
+             {% for i in product %}
             <div class="product-card">
-                <img src="ss.png" alt="Product" class="product-image">
+                <img src="{{i.image}}" alt="Product" class="product-image">
                 <div class="product-info">
-                    <h3>Wireless Noise-Canceling Headphones</h3>
-                    <p class="product-price">$199.99</p>
-                    <button class="quick-view">Quick View</button>
+                    <h3>{{i.id}}</h3>
+                    <p class="product-price">{{i.price}}</p>
+                    
+                    <div class="quantity-controls">
+                        <button type="button" onclick="decreaseQuantity('{{ i.id }}')">−</button>
+                        <input type="number" id="quantity-{{ i.id }}" value="1" min="1" oninput="updateTotal('{{ i.id }}')">
+                        <button type="button" onclick="increaseQuantity('{{ i.id }}')">+</button>
+                        <form id="cart-form-{{ i.id }}" action="/user/cart/{{ i.id }}/1" method="POST">
+                            <button type="submit" class="quick-view">Add to Cart</button>
+                        </form>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="product-card">
-                <img src="ss.png" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>Smartwatch Pro X</h3>
-                    <p class="product-price">$249.99</p>
-                    <button class="quick-view">Quick View</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="ss.png" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>4K Ultra HD Smart TV</h3>
-                    <p class="product-price">$799.99</p>
-                    <button class="quick-view">Quick View</button>
-                </div>
-            </div>
-    
-            <!-- Row 2 -->
-            <div class="product-card">
-                <img src="ss.png" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>Gaming Laptop</h3>
-                    <p class="product-price">$1299.99</p>
-                    <button class="quick-view">Quick View</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="ss.png" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>Wireless Earbuds</h3>
-                    <p class="product-price">$99.99</p>
-                    <button class="quick-view">Quick View</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="ss.png" alt="Product" class="product-image">
-                <div class="product-info">
-                    <h3>Bluetooth Speaker</h3>
-                    <p class="product-price">$59.99</p>
-                    <button class="quick-view">Quick View</button>
-                </div>
-            </div>
+            {%endfor%}                           
         </div>
     </section>
 
@@ -326,4 +327,27 @@
         </div>
     </footer>
 </body>
+<script>
+    function increaseQuantity(id) {
+    let quantityInput = document.getElementById(`quantity-${id}`);
+    if (quantityInput) {
+        quantityInput.value = parseInt(quantityInput.value) + 1;
+        updateTotal(id); // Update the form action after incrementing
+    }
+}
+
+function decreaseQuantity(id) {
+    let quantityInput = document.getElementById(`quantity-${id}`);
+    if (quantityInput && parseInt(quantityInput.value) > 1) {
+        quantityInput.value = parseInt(quantityInput.value) - 1;
+        updateTotal(id); // Update the form action after decrementing
+    }
+}
+
+function updateTotal(itemId) {
+    let quantity = document.getElementById(`quantity-${itemId}`).value;
+    let form = document.getElementById(`cart-form-${itemId}`);
+    form.action = `/user/cart/${itemId}/${quantity}`;
+}
+</script>
 </html>

@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Request, Depends, Form, UploadFile, File, HTTPException, Response
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from cloudinary.uploader import upload
+import cloudinary
 from sqlalchemy.orm import Session
 from source.schemas.seller_schema import SellerLoginSchema, SellerSchema
 from source.config.database import get_db
@@ -10,6 +12,7 @@ from source.models.seller import Seller
 from source.models.product import Product
 from source.schemas.product_schema import ProductSchema
 from source.utils.dependency import get_seller_products
+from source.utils.upload import Configure
 from source.utils.categories import ( 
     CategoryEnum,
     CATEGORY_MAPPING,
@@ -84,14 +87,13 @@ async def seller_products(
     db: Session = Depends(get_db),
     image: UploadFile = File(...)
 ):
-    image_data = await image.read()
-    if not image_data:
-        return {"error": "Uploaded file is empty!"}
+    cloudinary_result = upload(image.file)
+    image_url = cloudinary_result.get("secure_url")
 
     new_product = Product(
         name=product.name,
         description=product.description,
-        image=image_data,
+        image=image_url,
         price=product.price,
         category=seller.category,  # Auto-fill category from logged-in seller
         sub_category=product.category,

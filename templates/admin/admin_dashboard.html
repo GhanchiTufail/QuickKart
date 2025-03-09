@@ -49,6 +49,11 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: #fff;
         }
+        .mainlist {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border-radius: 8px;
+        }
         .main-content {
             flex: 1;
             padding: 30px;
@@ -72,17 +77,14 @@
     </style>
 </head>
 <body>
-    <p>
-        Hello {{email}} 
-    </p>
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Admin Panel</h2>
         <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Users</a></li>
-            <li><a href="#">Sellers</a></li>
-            <li><a href="#">Products</a></li>
+            <li class="mainlist"><a href="#">Dashboard</a></li>
+            <li><a href="/admin/users">Users</a></li>
+            <li><a href="/admin/sellers">Sellers</a></li>
+            <li><a href="/admin/products">Products</a></li>
             <li><a href="#">Settings</a></li>
             <li><a href="#">Logout</a></li>
         </ul>

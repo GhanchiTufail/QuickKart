@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class AdminSchema(BaseModel):
     email: str
@@ -7,8 +7,8 @@ class AdminSchema(BaseModel):
 # updated 
 
 class SellerPagination(BaseModel):
-    limit: int | None = 10
-    page: int | None = 1
+    limit: int = Field(default=10)
+    page: int = Field(default=1)
     category: str | None = None
     store: str | None = None
     phone: str | None = None
@@ -27,8 +27,10 @@ class SellerListResponse(BaseModel):
     category: str
 
 class UserPagination(BaseModel):
-    limit: int | None = 10
-    page: int | None = 1
-    name: str | None = None
-    email: str | None = None
-    phone: str | None = None
+    limit: int = Field(default=10)
+    page: int = Field(default=1)
+
+class ProductPagination(BaseModel):
+    limit: int = Field(default=10)
+    page: int = Field(default=1)
+    seller_id: int | None = None

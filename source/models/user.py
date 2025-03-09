@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Index
 from sqlalchemy.orm import relationship
-from sqlalchemy import  Integer, String, Float, Boolean, DateTime
+from sqlalchemy import  Integer, String, Float, Boolean, DateTime, func
 from source.config.database import Base, engine
 
 # Core Models
@@ -14,7 +14,7 @@ class User(Base):
     password = Column(String(255), nullable=False)
     phone = Column(String(20))
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=func.now())
     
     # addresses = relationship("Address", back_populates="user")
     # orders = relationship("Order", back_populates="user")
