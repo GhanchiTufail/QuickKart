@@ -38,13 +38,11 @@ def login_user_controller(request: Request, user: UserLoginSchema, db: Session):
 #     pass
 
 def add_to_cart_controller(request: Request, product_id: int, user_id: int, db: Session, quantity: int = 1):
-    print("2")
     query = db.query(Cart).filter(and_(Cart.product_id == product_id , Cart.user_id == Cart.user_id)).first()
+    # print(query.id, query.quantity)
     if query:
-        print("3")
         query.quantity+=quantity
     else:
-        print("4")
         query = db.query(Product).filter(product_id == Product.id).first()
         product_price = query.price * quantity
         add_to_cart(product_id,quantity,product_price,user_id,db)

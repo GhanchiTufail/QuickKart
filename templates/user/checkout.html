@@ -289,7 +289,7 @@
         <!-- Shipping and Payment Form -->
         <div class="shipping-form">
             <h3>Shipping & Payment Details</h3>
-            <form id="checkout-form">
+            <form id="checkout-form" action="/user/order/{{id}}" method="post">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
 
@@ -323,13 +323,15 @@
     </section>
 
     <!-- Payment Modal -->
-    <div class="payment-modal" id="payment-modal">
+    <!-- <div class="payment-modal" id="payment-modal">
         <div class="payment-modal-content">
             <h2>Payment Successful!</h2>
             <p>Thank you for your purchase. Your order has been placed successfully.</p>
-            <button id="close-modal">Close</button>
+            <form action="/user/order/{{id}}" method="post">
+            <button id="close-modal">Confirm</button>
+        </form>
         </div>
-    </div>
+    </div> -->
 
     <!-- Footer -->
     <footer>
@@ -360,7 +362,7 @@
         </div>
     </footer>
 
-    <script>
+    <!-- <script>
         // JavaScript to handle the dummy payment process
         const checkoutForm = document.getElementById('checkout-form');
         const paymentModal = document.getElementById('payment-modal');
@@ -380,6 +382,6 @@
                 paymentModal.style.display = 'none'; // Close the modal if clicked outside
             }
         });
-    </script>
+    </script> -->
 </body>
 </html>
