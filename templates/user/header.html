@@ -1,0 +1,90 @@
+<!-- header.html -->
+<style>
+    /* Header Styles */
+    header {
+        background: white;
+        padding: 1rem 2rem;
+        position: sticky;
+        top: 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none; /* Remove underline from link */
+        transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+        transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+    .search-bar {
+        flex: 0 1 400px;
+        padding: 0.5rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 25px;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    .search-bar:focus {
+        border-color: var(--primary); /* Highlight search bar on focus */
+    }
+
+    nav {
+        display: flex;
+        gap: 1.5rem; /* Space between navigation links */
+    }
+
+    nav a {
+        color: var(--dark);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    nav a:hover {
+        color: var(--primary); /* Change color on hover */
+        transform: translateY(-2px); /* Slight lift effect on hover */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        nav {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+</style>
+<!-- header.html -->
+<header>
+    <a href="/user/home" class="logo">QuickKart</a>
+    <input type="text" class="search-bar" placeholder="Search products...">
+    <nav>
+        <a href="/user/home">Home</a>
+        <a href="/user/categories">Categories</a>
+        <a href="/user/cart">Cart</a>
+        <a href="/user/account/{{user.id}}">Account</a>
+    </nav>
+</header>

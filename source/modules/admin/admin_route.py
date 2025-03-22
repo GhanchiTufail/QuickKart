@@ -52,7 +52,7 @@ async def get_users(request: Request,param: UserPagination = Depends(), db: Sess
 @router.get("/products")
 async def get_products(request: Request,param: ProductPagination = Depends(), db: Session = Depends(get_db)):
     products = product_list_service(param,db)
-    return templates.TemplateResponse("admin/product_list.html", {"request": request, "products": products["query"],"seller_id":products["Seller id"], "page":products["page"], "total_pages":products["total pages"], "total_products":products["total product"]})
+    return templates.TemplateResponse("admin/product_list.html", {"request": request, "products": products["query"], "seller_id":products["Seller id"], "page":products["page"], "total_pages":products["total pages"], "total_products":products["total product"], "status":products["status"]})
 
 
 @router.post("/seller/ban/{seller_id}")

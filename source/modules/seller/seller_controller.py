@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from source.config.database import get_db
 from source.models.seller import Seller
 from source.schemas.seller_schema import SellerLoginSchema, SellerSchema
-from source.modules.seller.seller_service import create_seller_service, login_seller_service
+from source.modules.seller.seller_service import create_seller_service, login_seller_service, product_delete_service, product_detail_service
 from source.utils.categories import CategoryEnum
 
 templates = Jinja2Templates(directory="templates")

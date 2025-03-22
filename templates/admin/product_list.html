@@ -153,10 +153,11 @@
     <div class="main-content">
         <h1>Product List : Total Products = {{total_products}}</h1>
         {% if seller_id %}
-        <form action="/admin/seller/ban/{{seller_id}}" method="post" class="ban-seller-form">
-            <button type="submit" class="ban-seller-button">Ban Seller</button>
-        </form>
+            <form action="/admin/seller/ban/{{ seller_id }}" method="post" class="ban-seller-form">
+                <button type="submit" class="ban-seller-button">{{status}}</button>
+            </form>
         {% endif %}
+
         <div class="table-container">
             <table class="product-table">
                 <thead>

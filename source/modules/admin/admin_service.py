@@ -96,7 +96,14 @@ def  user_list_service(user: UserPagination,db: Session):
 
 
 def  product_list_service(product: ProductPagination,db: Session):
+    status = None
     query = db.query(Product).join(Seller, Product.seller_id == Seller.id)
+    if product.seller_id:
+        status = db.query(Seller).filter(Seller.id == product.seller_id).first()
+        if status.is_banned is True:
+            status = "Activete Seller"
+        elif status.is_banned is False:
+            status = "Ban Seller"
 
     if product.seller_id:
         query = query.filter(Product.seller_id == product.seller_id)
@@ -124,16 +131,28 @@ def  product_list_service(product: ProductPagination,db: Session):
         "page":product.page,
         "total pages":total_pages,
         "total product":total_products,
+        "status":status,
         "Seller id":product.seller_id if product.seller_id else None
     }
 
 
 def seller_ban_service(seller_id:int, db: Session):
     query = db.query(Seller).filter(Seller.id == seller_id).first()
-
-    query.is_banned = True
+    if query.is_banned == False:
+        query.is_banned = True
+        message = "ban"
+    else:
+        query.is_banned = False
+        message = "Activate"
 
     db.commit()
     db.refresh(query)
 
-    return {"Message":f"{query.name} is now ban"}
+    return {"Message":f"{query.name} is now {message}"}
+
+# def seller_unban_service(seller_id:int, db:Session):
+#     query = db.query(Seller).filter(Seller.id == seller_id).first()
+#     query.is_banned = False
+#     db.commit()
+#     db.refresh(query)
+#     return {"Message":f"{query.name} is now unban"}

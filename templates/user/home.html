@@ -250,16 +250,17 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
+    <!-- <header>
         <div class="logo">QuickKart</div>
         <input type="text" class="search-bar" placeholder="Search products...">
         <nav>
             <a href="/">Home</a>
             <a href="/categories">Categories</a>
             <a href="/user/cart">Cart</a>
-            <a href="/account">Account</a>
+            <a href="/user/account/{{user.id}}">Account</a>
         </nav>
-    </header>
+    </header> -->
+    {% include 'user/header.html' %}
 
     <!-- Hero Section -->
     <section class="hero">
@@ -278,16 +279,13 @@
             <!-- Row 1 -->
              {% for i in product %}
             <div class="product-card">
-                <img src="{{i.image}}" alt="Product" class="product-image" style="max-width: 100px; height: 100px;">
+                <a href="/user/product/{{i.id}}"><img src="{{i.image}}" alt="Product" class="product-image" style="max-width: 100px; height: 100px;"></a>
                 <div class="product-info">
                     <h3>{{i.name}}</h3>
                     <p class="product-price">{{i.price}}</p>
                     
                     <div class="quantity-controls">
-                        <button type="button" onclick="decreaseQuantity('{{ i.id }}')">−</button>
-                        <input type="number" id="quantity-{{ i.id }}" value="1" min="1" oninput="updateTotal('{{ i.id }}')">
-                        <button type="button" onclick="increaseQuantity('{{ i.id }}')">+</button>
-                        <form id="cart-form-{{ i.id }}" action="/user/cart/{{ i.id }}/1" method="POST">
+                        <form id="cart-form-{{ i.id }}" action="/user/cart/home/{{ i.id }}" method="POST">
                             <button type="submit" class="quick-view">Add to Cart</button>
                         </form>
                     </div>

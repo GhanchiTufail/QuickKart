@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from source.schemas.user_schema import UserLoginSchema, UserSchema
 from source.config.database import get_db
 from source.utils.token import get_current_user
-from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller
+from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller, order_controller, account_controller, cart_remove_controller, single_product_controller
 from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
@@ -40,12 +40,13 @@ async def user_dashboard(request: Request, user: User = Depends(get_current_user
     #product_list = 
     return templates.TemplateResponse("user/home.html", {"request": request, "user":user, "product":product})
 
-@router.post("/cart/{product_id}/{quantity}")
-async def add_to_cart(request: Request, product_id: int,quantity: int, user: User = Depends(get_current_user), product: Product = Depends(get_all_products), db: Session = Depends(get_db)):
-    # add_to_cart_controller(request, product_id, quantity, user.id, db=db)
-    print("1")
+@router.post("/cart/{page}/{product_id}")
+async def add_to_cart(request: Request, page:str, product_id: int,quantity: int = 1, user: User = Depends(get_current_user), product: Product = Depends(get_all_products), db: Session = Depends(get_db)):
     add_to_cart_controller(request,product_id,user.id,db,quantity)
-    return RedirectResponse(url="/user/home", status_code=303)
+    if page == "home":
+        return RedirectResponse(url="/user/home", status_code=303)
+    elif page == "product":
+        return RedirectResponse(url="/user/product/{product_id}")
 
 
 @router.get("/cart")
@@ -55,8 +56,8 @@ async def show_cart(request: Request, user: User = Depends(get_current_user), pr
     total = 0
     for i in query:
         prd = db.query(Product).filter( Product.id == i.product_id).first()
-        total += i.amount
         cart_list.append({
+                "cart_id": i.id,
                 "product_name": prd.name,  # assuming field is named 'name'
                 "product_image": prd.image,  # assuming field is named 'image'
                 "product_description": prd.description,  # assuming field is named 'description'
@@ -86,3 +87,34 @@ async def checkout(request: Request, id: int, db: Session = Depends(get_db), use
         # print(cart_list(1))
     # product = show_cart_controller(request,user, db)
     return templates.TemplateResponse("user/checkout.html", {"request": request,"id":id, "user":user, "cart":cart_list, "total":total})
+
+
+@router.post("/order/{id}")
+async def order_route(request: Request, id: int, db:Session=Depends(get_db)):
+    order_controller(request,id,db)
+    return {
+        "Message":"Successful"
+    }
+
+@router.get("/account/{id}")
+async def account(request: Request, id: int, db: Session = Depends(get_db)):
+    query = account_controller(request, id, db)
+    return templates.TemplateResponse("user/account.html", {"request":request, "id":query.id, "name":query.name, "email":query.email, "phone":query.phone })
+
+
+@router.post("/cart/{id}")
+async def cart_remove(request: Request, id: int, db: Session = Depends(get_db)):
+    cart_remove_controller(request, id, db)
+    return RedirectResponse(url="/user/cart" , status_code=303)
+
+
+@router.get("/product/{id}")
+async def single_product_service(request: Request, id: int, db: Session = Depends(get_db)): 
+    product = single_product_controller(request, id, db)
+    return templates.TemplateResponse("user/product.html",{"request":request, "id":product.id, "image":product.image, "name":product.name, "price":product.price, "description":product.description})
+
+
+@router.get("/order/{id}")
+async def order_list(request: Request, id: int, db: Session = Depends(get_db)):
+    pass
+    return templates.TemplateResponse("user/order_list.html", {"request":request})

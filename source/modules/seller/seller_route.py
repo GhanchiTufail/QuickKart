@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from source.schemas.seller_schema import SellerLoginSchema, SellerSchema
 from source.config.database import get_db
 from source.utils.token import get_current_seller
-from source.modules.seller.seller_controller import login_seller_controller, create_seller_controller
+from source.modules.seller.seller_controller import login_seller_controller, create_seller_controller, product_delete_service, product_detail_service
 from source.models.seller import Seller
 from source.models.product import Product
 from source.schemas.product_schema import ProductSchema
@@ -151,3 +151,14 @@ def get_list():
     # for list in CategoryEnum:
     #     data.append(list)
     return {"list":data}
+
+
+@router.post("/product/delete/{id}")
+async def product_delete(id:int, db: Seller = Depends(get_db)):
+    product_delete_service(id,db)
+    return {"Message":"Successful"}
+
+
+@router.get("/product/details/{id}")
+async def product_details(id:int, db: Session = Depends(get_db)):
+    return product_detail_service(id, db)

@@ -24,7 +24,7 @@ class Product(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     
     seller = relationship("Seller", back_populates="products")
-    #order_items = relationship("OrderItem", back_populates="product")
+    order_items = relationship("OrderItem", back_populates="product")
     #rental_items = relationship("RentalItem", back_populates="product")
     #wishlist_items = relationship("Wishlist", back_populates="product")
     #reviews = relationship("Review", back_populates="product")

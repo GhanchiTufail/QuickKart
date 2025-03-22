@@ -1,4 +1,4 @@
-from fastapi import Request, Depends, Form
+from fastapi import Request, Depends, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from sqlalchemy import and_
@@ -8,7 +8,7 @@ from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
 from source.schemas.user_schema import UserLoginSchema, UserSchema
-from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart
+from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart, order_service, account_service, cart_remove_service, single_product_service
 
 templates = Jinja2Templates(directory="templates")
 
@@ -50,3 +50,30 @@ def add_to_cart_controller(request: Request, product_id: int, user_id: int, db: 
 def show_cart_controller(request : Request, user: User, db: Session):
     query = show_cart(user, db)
     
+def order_controller(request: Request, id: int, db: Session):
+    order_service(id,db)
+
+def account_controller(request: Request, id: int, db: Session):
+    try:
+        return account_service(id,db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in account controller {str(e)}")
+    
+def cart_remove_controller(request: Request, id: int, db: Session):
+    try:
+        cart_remove_service(id,db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error while removing cart item {str(e)}")
+    
+
+def single_product_controller(request: Request, id: int, db: Session):
+    try:
+        return single_product_service(id,db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in single product controller : {str(e)}")
+    
+def order_list_controller(request: Request, id: int, db: Session):
+    try:
+        print(1)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in order list controller {str(e)}")

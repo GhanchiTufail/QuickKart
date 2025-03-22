@@ -256,16 +256,7 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
-        <div class="logo">QuickKart</div>
-        <input type="text" class="search-bar" placeholder="Search products...">
-        <nav>
-            <a href="/user/home">Home</a>
-            <a href="/categories">Categories</a>
-            <a href="/user/cart">Cart</a>
-            <a href="/account">Account</a>
-        </nav>
-    </header>
+    {% include 'user/header.html' %}
 
     <!-- Checkout Section -->
     <section class="checkout-container">
@@ -277,7 +268,7 @@
                 <img src="{{ item.product_image }}" alt="Product Image">
                 <div class="cart-item-info">
                     <h4>{{ item.product_name }}</h4>
-                    <p>{{ item.product_description }}</p>
+                    <!-- <p>{{ item.product_description }}</p> -->
                     <p class="cart-item-price">${{ item.price }}</p>
                     <p>Quantity: {{ item.quantity }}</p>
                 </div>

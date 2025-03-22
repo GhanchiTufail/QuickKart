@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from source.models.seller import Seller
+from source.models.product import Product
 from source.utils.hashing import verify_password, hash_password
 from source.utils.token import create_access_token
 from source.schemas.seller_schema import SellerLoginSchema, SellerSchema
@@ -44,3 +45,12 @@ def login_seller_service(seller: SellerLoginSchema, db: Session):
             return access_token
     except:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="error while creating seller token")
+    
+
+def product_delete_service(id: int, db: Session):
+    query = db.query(Product).filter(Product.id == id).delete()
+    db.commit()
+
+def product_detail_service(id: int, db: Session):
+    product = db.query(Product).filter(Product.id == id).first()
+    return product
