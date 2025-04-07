@@ -171,3 +171,7 @@ def get_order_service(user: User, db: Session):
         }) 
     return order_list
     
+
+def rental_list_service(user: User, db: Session):
+    query = db.query(Rental).filter(Rental.user_id == user.id).all()
+    return query

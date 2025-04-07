@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from source.schemas.user_schema import UserLoginSchema, UserSchema
 from source.config.database import get_db
 from source.utils.token import get_current_user
-from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller, order_controller, account_controller, cart_remove_controller, single_product_controller, rent_product_controller, get_order_controller, get_order_service
+from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller, order_controller, account_controller, cart_remove_controller, single_product_controller, rent_product_controller, get_order_controller, get_order_service, rental_list_controller
 from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
@@ -138,4 +138,5 @@ async def rent_item(request: Request, id: int,month: int, user: User = Depends(g
 
 @router.get("/rent")
 async def rent_list(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    pass
+    product = rental_list_controller(request, user, db)
+    return templates.TemplateResponse("user/rent_item.html",{"request":request, "product":product})

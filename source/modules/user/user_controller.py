@@ -8,7 +8,7 @@ from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
 from source.schemas.user_schema import UserLoginSchema, UserSchema
-from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart, order_service, account_service, cart_remove_service, single_product_service, rent_item_service, get_order_service
+from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart, order_service, account_service, cart_remove_service, single_product_service, rent_item_service, get_order_service, rental_list_service
 
 templates = Jinja2Templates(directory="templates")
 
@@ -95,3 +95,10 @@ def get_order_controller(request: Request, user: User, db: Session):
         return products
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in order controller {str(e)}")
+    
+
+def rental_list_controller(request: Request, user: User , db: Session):
+    try:
+        return rental_list_service(user,db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in rental list controller {str(e)}")
