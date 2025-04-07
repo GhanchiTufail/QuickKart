@@ -205,24 +205,20 @@
     <!-- Order Items Section -->
     <section class="order-container">
         <h2 class="order-header">Your Order Items</h2>
-        {% for item in order_items %}
+        {% for item in product %}
         <div class="order-item">
-            <img src="{{ item.product.image_url }}" alt="Product Image">
+            <img src='{{ item["image"] }}' alt="Product Image">
             <div class="order-item-info">
-                <h3>{{ item.product.name }}</h3>
-                <!-- <p>{{ item.product.description }}</p> -->
-                <p class="order-item-price">${{ item.price }}</p>
-                <p>Quantity: {{ item.quantity }}</p>
+                <h3>{{ item["name"] }}</h3>
+            
+                <p class="order-item-price">${{ item["price"] }}</p>
+                <p>Quantity: {{ item["quantity"] }}</p>
+                <p>Order time: {{ item["created_at"]}}</p>
+                <p>Status: {{ item["status"] }}</p>
             </div>
         </div>
         {% endfor %}
 
-        <!-- Order Summary -->
-        <div class="order-summary">
-            <h3>Order Summary</h3>
-            <p>Total Items: {{ order_items|length }}</p>
-            <p>Total Price: ${{ total_price }}</p>
-        </div>
     </section>
 
     <!-- Footer -->

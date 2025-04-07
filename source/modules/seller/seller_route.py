@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from source.schemas.seller_schema import SellerLoginSchema, SellerSchema
 from source.config.database import get_db
 from source.utils.token import get_current_seller
-from source.modules.seller.seller_controller import login_seller_controller, create_seller_controller, product_delete_service, product_detail_service
+from source.modules.seller.seller_controller import login_seller_controller, create_seller_controller, product_delete_service, product_detail_service, seller_order_controller, product_delivered_controller
 from source.models.seller import Seller
 from source.models.product import Product
 from source.schemas.product_schema import ProductSchema
@@ -111,9 +111,9 @@ async def seller_products(
     # return templates.TemplateResponse("seller/seller_products.html",{"request":request, "seller":seller})
 
 # seller order
-@router.get("/order")
-async def seller_order(request: Request, seller: Seller = Depends(get_current_seller)):
-    return templates.TemplateResponse("seller/seller_order.html",{"request":request,"seller":seller})
+# @router.get("/order")
+# async def seller_order(request: Request, seller: Seller = Depends(get_current_seller)):
+#     return templates.TemplateResponse("seller/seller_order.html",{"request":request,"seller":seller})
 
 
 # seller analytics
@@ -160,5 +160,16 @@ async def product_delete(id:int, db: Seller = Depends(get_db)):
 
 
 @router.get("/product/details/{id}")
-async def product_details(id:int, db: Session = Depends(get_db)):
+async def product_details(id:int,db: Session = Depends(get_db)):
     return product_detail_service(id, db)
+
+
+@router.get("/order")
+async def seller_order(request: Request,status:str | None = None, seller: Seller = Depends(get_current_seller), db: Session = Depends(get_db)):
+    product = seller_order_controller(request, seller, db, status)
+    return templates.TemplateResponse("seller/seller_order.html",{"request":request,"product":product})
+    
+
+@router.post("/product/delivered/{id}")
+async def order_delivered(request: Request, id: int, seller: Seller = Depends(get_current_seller), db: Session = Depends(get_db)):
+    return product_delivered_controller(request, id, seller,db)

@@ -8,7 +8,7 @@ from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
 from source.schemas.user_schema import UserLoginSchema, UserSchema
-from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart, order_service, account_service, cart_remove_service, single_product_service
+from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart, order_service, account_service, cart_remove_service, single_product_service, rent_item_service, get_order_service
 
 templates = Jinja2Templates(directory="templates")
 
@@ -38,6 +38,9 @@ def login_user_controller(request: Request, user: UserLoginSchema, db: Session):
 #     pass
 
 def add_to_cart_controller(request: Request, product_id: int, user_id: int, db: Session, quantity: int = 1):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if product.stock < 1:
+        return 0
     query = db.query(Cart).filter(and_(Cart.product_id == product_id , Cart.user_id == Cart.user_id)).first()
     # print(query.id, query.quantity)
     if query:
@@ -77,3 +80,18 @@ def order_list_controller(request: Request, id: int, db: Session):
         print(1)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in order list controller {str(e)}")
+    
+
+def rent_product_controller(request: Request, id: int, month: int, user: User, db: Session):
+    try:
+        rent_item_service(id,month,user,db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in rent product controller {str(e)}")
+    
+
+def get_order_controller(request: Request, user: User, db: Session):
+    try:
+        products = get_order_service(user, db)
+        return products
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in order controller {str(e)}")

@@ -331,6 +331,7 @@
                 <!-- <p>{{ item.product_description }}</p> -->
                 <p class="cart-item-price">${{ item.price }}</p>
                 <p>Quantity: {{ item.quantity }}</p>
+                <p>Stock: {{ item.stock }}</p>
             </div>
             <form action="/user/cart/{{item.cart_id}}" method="post">
                 <button type="submit" class="remove-item">Remove</button>

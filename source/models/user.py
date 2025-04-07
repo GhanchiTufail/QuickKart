@@ -22,6 +22,6 @@ class User(Base):
     # reviews = relationship("Review", back_populates="user")
     # payments = relationship("Payment", back_populates="user")
     # carts = relationship("Cart", back_populates="user")
-    # rental_orders = relationship("RentalOrder", back_populates="user")
+    rentals = relationship("Rental", back_populates="user")
 
 Base.metadata.create_all(bind=engine)

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from source.schemas.user_schema import UserLoginSchema, UserSchema
 from source.config.database import get_db
 from source.utils.token import get_current_user
-from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller, order_controller, account_controller, cart_remove_controller, single_product_controller
+from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller, order_controller, account_controller, cart_remove_controller, single_product_controller, rent_product_controller, get_order_controller, get_order_service
 from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
@@ -37,7 +37,6 @@ async def login_seller(request: Request, user: UserLoginSchema = Form(...), db: 
 # User Dashboard
 @router.get("/home")
 async def user_dashboard(request: Request, user: User = Depends(get_current_user), product: Product = Depends(get_all_products)):
-    #product_list = 
     return templates.TemplateResponse("user/home.html", {"request": request, "user":user, "product":product})
 
 @router.post("/cart/{page}/{product_id}")
@@ -52,9 +51,10 @@ async def add_to_cart(request: Request, page:str, product_id: int,quantity: int 
 @router.get("/cart")
 async def show_cart(request: Request, user: User = Depends(get_current_user), product: Product = Depends(get_all_products),db: Session = Depends(get_db)):
     query = db.query(Cart).filter(user.id == Cart.user_id).all()
-    cart_list = []
     total = 0
+    cart_list = []
     for i in query:
+        total += i.amount
         prd = db.query(Product).filter( Product.id == i.product_id).first()
         cart_list.append({
                 "cart_id": i.id,
@@ -62,7 +62,8 @@ async def show_cart(request: Request, user: User = Depends(get_current_user), pr
                 "product_image": prd.image,  # assuming field is named 'image'
                 "product_description": prd.description,  # assuming field is named 'description'
                 "quantity": i.quantity,  # adjust field name if needed
-                "price": i.amount 
+                "price": i.amount,
+                "stock": prd.stock
         })
         # print(cart_list(1))
     # product = show_cart_controller(request,user, db)
@@ -92,13 +93,15 @@ async def checkout(request: Request, id: int, db: Session = Depends(get_db), use
 @router.post("/order/{id}")
 async def order_route(request: Request, id: int, db:Session=Depends(get_db)):
     order_controller(request,id,db)
+    # return RedirectResponse("/user/home", status_code=307)
     return {
         "Message":"Successful"
     }
 
-@router.get("/account/{id}")
-async def account(request: Request, id: int, db: Session = Depends(get_db)):
-    query = account_controller(request, id, db)
+
+@router.get("/account")
+async def account(request: Request,user:User = Depends(get_current_user), db: Session = Depends(get_db)):
+    query = account_controller(request, user.id, db)
     return templates.TemplateResponse("user/account.html", {"request":request, "id":query.id, "name":query.name, "email":query.email, "phone":query.phone })
 
 
@@ -111,10 +114,28 @@ async def cart_remove(request: Request, id: int, db: Session = Depends(get_db)):
 @router.get("/product/{id}")
 async def single_product_service(request: Request, id: int, db: Session = Depends(get_db)): 
     product = single_product_controller(request, id, db)
-    return templates.TemplateResponse("user/product.html",{"request":request, "id":product.id, "image":product.image, "name":product.name, "price":product.price, "description":product.description})
+    print(product.is_rentable)
+    return templates.TemplateResponse("user/product.html",{"request":request, "id":product.id, "image":product.image, "name":product.name, "price":product.price, "description":product.description, "rent":product.is_rentable, "stock":product.stock})
 
 
-@router.get("/order/{id}")
-async def order_list(request: Request, id: int, db: Session = Depends(get_db)):
+@router.get("/order")
+async def order_list(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    product = get_order_service(user, db)
+    return templates.TemplateResponse("user/Orderitem.html",{"request":request, "product":product})
+
+
+@router.post("/rent/{id}")
+async def rent(request: Request, id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    product = single_product_controller(request, id, db)
+    return templates.TemplateResponse("user/rent.html", {"request":request,"id":product.id, "name":product.name, "price":product.daily_rate})
+
+
+@router.post("/rent/item/{id}/{month}")
+async def rent_item(request: Request, id: int,month: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    rent_product_controller(request, id, month, user, db)
+    return RedirectResponse(url="/user/home" , status_code=303)
+
+
+@router.get("/rent")
+async def rent_list(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     pass
-    return templates.TemplateResponse("user/order_list.html", {"request":request})

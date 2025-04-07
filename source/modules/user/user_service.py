@@ -1,13 +1,17 @@
 from fastapi import HTTPException, status
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from source.models.user import User
 from source.models.cart import Cart
 from source.models.order import Order
 from source.models.product import Product
 from source.models.order_items import OrderItem
+from source.models.rental_items import Rental
+from source.models.order import Order
 from source.utils.hashing import verify_password, hash_password
 from source.utils.token import create_access_token
 from source.schemas.user_schema import UserLoginSchema, UserSchema
+from datetime import datetime,timedelta, date
 
 def create_user_service(user: UserSchema, db: Session):
     try:
@@ -52,7 +56,6 @@ def login_user_service(user: UserLoginSchema, db: Session):
 
 # Add to cart
 def add_to_cart(id: int,quantity:int, product_price, user_id: int, db: Session):
-    print("3")
     try:
         cart = Cart(
             user_id = user_id,
@@ -85,6 +88,9 @@ def order_service(id: int, db: Session):
     for i in cart_item:
         userId = i.user_id
         price += i.amount
+        product = db.query(Product).filter(Product.id == i.product_id).first()
+        product.stock -= 1
+        
 
     add_order = Order(
     user_id = userId,
@@ -128,3 +134,40 @@ def cart_remove_service(id: int, db: Session):
 def single_product_service(id: int, db: Session):
     product = db.query(Product).filter(Product.id == id).first()
     return product
+
+
+def rent_item_service(id: int,month: int,user: User, db: Session):
+    product = db.query(Product).filter(Product.id == id).first()
+    rentel = Rental(
+        user_id = user.id,
+        product_id = id,
+        start_date = func.now(),
+        end_date = func.now() + timedelta(days=(month * 30)),
+        total_price = product.daily_rate * month,
+        status = "active",
+        is_history = False
+    )
+    db.add(rentel)
+    db.commit()
+    db.refresh(rentel)
+
+
+def get_order_service(user: User, db: Session):
+    products = db.query(Product, OrderItem.quantity, Order.status, Order.created_at)\
+                 .join(OrderItem, Product.id == OrderItem.product_id)\
+                 .join(Order, OrderItem.order_id == Order.id)\
+                 .filter(Order.user_id == user.id).all()
+
+    order_list = []
+
+    for product, quantity, status, created_at in products:
+        order_list.append({
+            "name": product.name,
+            "image": product.image,
+            "price": product.price,
+            "status": status,  # Status from Order
+            "quantity": quantity,
+            "created_at": created_at.date()  # Order creation time
+        }) 
+    return order_list
+    

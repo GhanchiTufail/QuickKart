@@ -204,6 +204,13 @@
                 width: 100%;
             }
         }
+
+        .stock-status {
+            font-size: 50px;
+            font-weight: bold;
+            color: red; /* Default color for In Stock */
+
+        }
     </style>
 </head>
 <body>
@@ -219,9 +226,28 @@
             <h1>{{ name }}</h1>
             <p class="price">Rs.{{ price }}</p>
             <p class="description">{{ description }}</p>
-            <form action="/user/cart/product/{{ id }}/1" method="POST">
+            {% if stock > 0 %}
+            <form action="/user/cart/home/{{ id }}" method="POST">
                 <button type="submit" class="add-to-cart">Add to Cart</button>
             </form>
+            {% else %}
+            <div class="stock-status">
+                Out of stock
+            </div>
+            {% endif %}
+            {% if rent %}
+            <form action="/user/rent/{{id}}" method="POST">
+                <button type="submit" class="add-to-cart">Rent Product</button>
+            </form>
+            {% endif %}
+            <!-- <form action="/user/cart/product/{{ id }}" method="POST">
+                <input type="hidden" name="product_id" value="{{ id }}">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1">
+                <button type="submit">Add to Cart</button>
+            </form> -->
+            
+
         </div>
     </section>
 
