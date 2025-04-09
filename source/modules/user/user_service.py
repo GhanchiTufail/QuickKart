@@ -8,10 +8,12 @@ from source.models.product import Product
 from source.models.order_items import OrderItem
 from source.models.rental_items import Rental
 from source.models.order import Order
+from source.models.notification import Notification
 from source.utils.hashing import verify_password, hash_password
 from source.utils.token import create_access_token
 from source.schemas.user_schema import UserLoginSchema, UserSchema
 from datetime import datetime,timedelta, date
+from sqlalchemy import desc
 
 def create_user_service(user: UserSchema, db: Session):
     try:
@@ -76,11 +78,8 @@ def show_cart(user: User, db: Session):
 
 
 def order_service(id: int, db: Session):
-    #print("In function")
     try:
-        #print("Getting use detail")
         cart_item = db.query(Cart).filter(Cart.user_id == id).all()
-        #print("Got user")
     except:
         raise HTTPException("Error while getting user id from cart")
     
@@ -91,6 +90,18 @@ def order_service(id: int, db: Session):
         product = db.query(Product).filter(Product.id == i.product_id).first()
         product.stock -= 1
         
+        user = db.query(User).filter(User.id == id).first()
+        add_notification = Notification(
+            user_id = id,
+            seller_id = product.seller_id,
+            product_id = product.id,
+            user_message = f"Order for {product.name} is placed successfully",
+            seller_message = f"Order from {user.name} for {product.name} is placed",
+            notification_type = "order"
+        )
+        db.add(add_notification)
+        db.commit()
+        db.refresh(add_notification)
 
     add_order = Order(
     user_id = userId,
@@ -111,7 +122,9 @@ def order_service(id: int, db: Session):
         db.add(add_order_item)
         db.commit()
         db.refresh(add_order_item)
+
         
+
     db.query(Cart).filter(Cart.user_id == id).delete()
     db.commit()
 
@@ -156,7 +169,7 @@ def get_order_service(user: User, db: Session):
     products = db.query(Product, OrderItem.quantity, Order.status, Order.created_at)\
                  .join(OrderItem, Product.id == OrderItem.product_id)\
                  .join(Order, OrderItem.order_id == Order.id)\
-                 .filter(Order.user_id == user.id).all()
+                 .filter(Order.user_id == user.id).all()    
 
     order_list = []
 
@@ -173,5 +186,36 @@ def get_order_service(user: User, db: Session):
     
 
 def rental_list_service(user: User, db: Session):
-    query = db.query(Rental).filter(Rental.user_id == user.id).all()
-    return query
+    rentals = db.query(Product, Rental.start_date, Rental.end_date, Rental.total_price, Rental.status, Rental.created_at)\
+                .join(Rental, Product.id == Rental.product_id)\
+                .filter(Rental.user_id == user.id).all()    
+
+    rental_list = []
+    
+
+    for product, start_date, end_date, total_price, status, created_at in rentals:
+        rental_list.append({
+            "name": product.name,
+            "image": product.image,
+            "rent_pm": int(product.daily_rate),
+            "price": product.price,
+            "start_date": start_date.date(),
+            "end_date": end_date.date() if end_date else None,  # Handle case where end_date is None
+            "total_price": total_price,
+            "status": status,
+            "created_at": created_at.date()
+        }) 
+    return rental_list
+
+
+def notification_list_service(user: User, db: Session):
+    notification = db.query(Notification).filter(Notification.user_id == user.id).all()
+    
+    notification_list = notification
+
+    for i in notification:
+        i.is_read = True
+        db.commit()
+        db.refresh(i)
+
+    return notification_list

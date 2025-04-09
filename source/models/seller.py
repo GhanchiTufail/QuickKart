@@ -5,7 +5,7 @@ from source.utils.categories import CategoryEnum
 
 class Seller(Base):
     __tablename__ = "sellers"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
@@ -22,5 +22,6 @@ class Seller(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())  # Auto-update timestamp
 
     products = relationship("Product", back_populates="seller")  # Relationship with Product model
+    notifications = relationship("Notification", back_populates="seller")
 
 Base.metadata.create_all(bind=engine)

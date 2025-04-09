@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickKart - Notifications</title>
+    <style>
+        /* Reuse existing styles from home.html */
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --dark: #2d3748;
+            --light: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom right, #f8f9fa, #ffffff);
+            color: var(--dark);
+        }
+
+        /* Notification-specific styles */
+        .notifications-section {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .notification-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .notification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .notification-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .notification-card.unread {
+            background: rgba(102, 126, 234, 0.05);
+            border-left-color: var(--secondary);
+        }
+
+        .notification-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .notification-product {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .notification-content {
+            margin: 1rem 0;
+        }
+
+        .notification-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+        }
+
+        /* Reuse footer and header styles from home.html */
+    </style>
+</head>
+<body>
+    {% include 'user/header.html' %}
+
+    <section class="notifications-section">
+        <div class="notification-header">
+            <h1>Your Notifications</h1>
+        </div>
+
+        <div class="notification-grid">
+            {% for notification in notifications %}
+            <div class="notification-card {% if not notification.is_read %}unread{% endif %}">
+                <div class="notification-meta">
+                    <span class="notification-type">{{ notification.notification_type }}</span>
+                    <span>{{ notification.created_at.strftime('%b %d, %Y') }}</span>
+                </div>
+                <div class="notification-content">
+                    <p>{{ notification.user_message }}</p>
+                    <p class="notification-product">Related to: {{ notification.product.name }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+</html>

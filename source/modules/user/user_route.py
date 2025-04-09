@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from source.schemas.user_schema import UserLoginSchema, UserSchema
 from source.config.database import get_db
 from source.utils.token import get_current_user
-from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller, order_controller, account_controller, cart_remove_controller, single_product_controller, rent_product_controller, get_order_controller, get_order_service, rental_list_controller
+from source.modules.user.user_controller import login_user_controller, create_user_controller, add_to_cart_controller, show_cart_controller, order_controller, account_controller, cart_remove_controller, single_product_controller, rent_product_controller, get_order_controller, get_order_service, rental_list_controller, notification_list_controller
 from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
@@ -85,18 +85,14 @@ async def checkout(request: Request, id: int, db: Session = Depends(get_db), use
                 "quantity": i.quantity,  # adjust field name if needed
                 "price": i.amount 
         })
-        # print(cart_list(1))
-    # product = show_cart_controller(request,user, db)
     return templates.TemplateResponse("user/checkout.html", {"request": request,"id":id, "user":user, "cart":cart_list, "total":total})
 
 
 @router.post("/order/{id}")
-async def order_route(request: Request, id: int, db:Session=Depends(get_db)):
+async def order_route(request: Request, id: int,user: User = Depends(get_current_user), product: Product = Depends(get_all_products), db:Session=Depends(get_db)):
     order_controller(request,id,db)
-    # return RedirectResponse("/user/home", status_code=307)
-    return {
-        "Message":"Successful"
-    }
+    return {"message":"success"}
+    return RedirectResponse("/user/home", status_code=303)
 
 
 @router.get("/account")
@@ -140,3 +136,9 @@ async def rent_item(request: Request, id: int,month: int, user: User = Depends(g
 async def rent_list(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     product = rental_list_controller(request, user, db)
     return templates.TemplateResponse("user/rent_item.html",{"request":request, "product":product})
+
+
+@router.get("/notification")
+async def notification_list(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    notification = notification_list_controller(request, user, db)
+    return templates.TemplateResponse("user/notification.html", {"request":request, "notifications": notification})

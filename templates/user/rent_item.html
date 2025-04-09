@@ -211,9 +211,10 @@
             <div class="order-item-info">
                 <h3>{{ item["name"] }}</h3>
             
-                <p class="order-item-price">${{ item["price"] }}</p>
-                <p>Quantity: {{ item["quantity"] }}</p>
-                <p>Order time: {{ item["created_at"]}}</p>
+                <p class="order-item-price">Total Rent: ${{ item["total_price"] }}</p>
+                <p>Start Date: {{ item["start_date"]}}</p>
+                <p>End Date: {{ item["end_date"]}}</p>
+                <p>Rent per month: ${{ item["rent_pm"]}}</p>
                 <p>Status: {{ item["status"] }}</p>
             </div>
         </div>

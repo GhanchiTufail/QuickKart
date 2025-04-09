@@ -16,7 +16,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=func.now())
     
-    # addresses = relationship("Address", back_populates="user")
+    notifications = relationship("Notification", back_populates="user")
     orders = relationship("Order", back_populates="user")
     # wishlist = relationship("Wishlist", back_populates="user")
     # reviews = relationship("Review", back_populates="user")
