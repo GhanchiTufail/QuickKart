@@ -17,20 +17,18 @@ templates = Jinja2Templates(directory="templates")
 
 
 def create_admin_service(request: Request, admin: AdminSchema, db: Session):
-    try:
-        query = db.query(Admin).filter(Admin.email == admin.email).first()
-        if query:
-            return False
-    except:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="error in checking if admin exist or not")
-    try:
-        new_admin = Admin(email=admin.email, password=hash_password(admin.password))
-        db.add(new_admin)
-        db.commit()
-        db.refresh(new_admin)
-        return True
-    except:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Error in creating admin")
+    # try:
+    #     query = db.query(Admin).filter(Admin.email == admin.email).first()
+    #     if query:
+    #         return False
+    # except:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="error in checking if admin exist or not")
+    
+    new_admin = Admin(email=admin.email, password=hash_password(admin.password))
+    db.add(new_admin)
+    db.commit()
+    db.refresh(new_admin)
+    return True
 
 
 def login_admin_service(admin: AdminSchema = Form(...), db: Session = Depends(get_db)):

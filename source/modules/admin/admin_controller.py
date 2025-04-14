@@ -1,4 +1,4 @@
-from fastapi import Request, Depends, Form
+from fastapi import Request, Depends, Form, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
@@ -13,14 +13,17 @@ from math import ceil
 templates = Jinja2Templates(directory="templates")
 
 def create_admin_controller(request: Request, admin: AdminSchema, db: Session):
-    query = create_admin_service(request,admin,db)
-    if query is False:
-        return templates.TemplateResponse(
-            "admin/signup.html",
-            {"request": request, "message": "Email already exists"},
-        )
-    if query is True:
-        return RedirectResponse(url="/admin/login", status_code=303)
+    try:
+        query = create_admin_service(request,admin,db)
+        if query is False:
+            return templates.TemplateResponse(
+                "admin/signup.html",
+                {"request": request, "message": "Email already exists"},
+            )
+        if query is True:
+            return RedirectResponse(url="/admin/login", status_code=303)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in create admin controller {str(e)}" )
 
 
 def login_admin_controller(request: Request, admin: AdminSchema, db: Session):
