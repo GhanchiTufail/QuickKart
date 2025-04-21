@@ -20,7 +20,7 @@ class User(Base):
     orders = relationship("Order", back_populates="user")
     # wishlist = relationship("Wishlist", back_populates="user")
     # reviews = relationship("Review", back_populates="user")
-    reviews = relationship("Review", back_populates="user")
+    # reviews = relationship("Review", back_populates="user")
     # payments = relationship("Payment", back_populates="user")
     # carts = relationship("Cart", back_populates="user")
     rentals = relationship("Rental", back_populates="user")

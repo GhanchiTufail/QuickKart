@@ -14,6 +14,7 @@ from source.utils.token import create_access_token
 from source.schemas.user_schema import UserLoginSchema, UserSchema
 from datetime import datetime,timedelta, date
 from sqlalchemy import desc
+import copy
 
 def create_user_service(user: UserSchema, db: Session):
     try:
@@ -209,13 +210,20 @@ def rental_list_service(user: User, db: Session):
 
 
 def notification_list_service(user: User, db: Session):
-    notification = db.query(Notification).filter(Notification.user_id == user.id).all()
-    
-    notification_list = notification
+    notification = db.query(Notification).filter(Notification.user_id == user.id).order_by(desc(Notification.created_at)).all()
+
+    NotificationResponse = []
+    for i in notification:
+        NotificationResponse.append({
+                "type":i.notification_type,
+                "Time": i.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "user":i.user_message,
+                "read":i.is_read
+            })
 
     for i in notification:
         i.is_read = True
         db.commit()
         db.refresh(i)
 
-    return notification_list
+    return NotificationResponse

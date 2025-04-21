@@ -8,7 +8,7 @@ from source.models.admin import Admin
 from source.models.user import User
 from datetime import datetime, timedelta
 
-SECRET_KEY = "your_secret_key"
+SECRET_KEY = "5446690435543456"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 

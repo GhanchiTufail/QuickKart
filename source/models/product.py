@@ -29,7 +29,7 @@ class Product(Base):
     notifications = relationship("Notification", back_populates="product")
     #wishlist_items = relationship("Wishlist", back_populates="product")
     #reviews = relationship("Review", back_populates="product")
-    reviews = relationship("Review", back_populates="product")
+    # reviews = relationship("Review", back_populates="product")
 
 
 Base.metadata.create_all(bind=engine)
