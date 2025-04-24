@@ -227,3 +227,8 @@ def notification_list_service(user: User, db: Session):
         db.refresh(i)
 
     return NotificationResponse
+
+
+def search_for_product(search: str, db: Session):
+    product = db.query(Product).filter(Product.name.ilike(f"%{search}%")).all()
+    return product

@@ -8,7 +8,7 @@ from source.models.user import User
 from source.models.product import Product
 from source.models.cart import Cart
 from source.schemas.user_schema import UserLoginSchema, UserSchema
-from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart, order_service, account_service, cart_remove_service, single_product_service, rent_item_service, get_order_service, rental_list_service, notification_list_service
+from source.modules.user.user_service import login_user_service, create_user_service, add_to_cart, show_cart, order_service, account_service, cart_remove_service, single_product_service, rent_item_service, get_order_service, rental_list_service, notification_list_service, search_for_product
 
 templates = Jinja2Templates(directory="templates")
 
@@ -107,5 +107,12 @@ def rental_list_controller(request: Request, user: User , db: Session):
 def notification_list_controller(request: Request, user: User, db: Session):
     try:
         return notification_list_service(user, db)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in notification list controller {str(e)}")
+    
+
+def search_product_controller(request: Request, search: str, db: Session):
+    try:
+        return search_for_product(search, db)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in notification list controller {str(e)}")
