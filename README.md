@@ -42,5 +42,50 @@ QuickKart is a feature-rich **E-commerce platform** developed using **FastAPI** 
 
 ---
 
-## 📁 Project Structure
 
+---
+
+## 👥 User Roles & Features
+
+### 👑 Admin
+- View all customers, sellers, and products
+- View individual seller’s uploaded products
+- Ban sellers for violating policies
+
+### 🧑‍💼 Seller
+- Upload, edit, and delete products
+- View notifications when a product is purchased
+
+### 🛍 Customer
+- Browse products and view details
+- Add products to cart
+- Make purchases
+- Receive notifications after a purchase
+
+---
+
+## 🖼 Image Handling
+
+- Product images are uploaded using **Cloudinary**, allowing for:
+  - Secure cloud storage
+  - Faster image delivery
+  - Optimized performance
+
+---
+
+## 🔐 Authentication & Security
+
+- **JWT-based authentication** for secure session management
+- **Passlib (bcrypt)** for strong password encryption
+- Role-based access control ensures each user only accesses their allowed features
+
+---
+
+## 🔄 Database Migrations
+
+Use **Alembic** for schema version control and applying changes safely:
+
+```bash
+alembic init alembic
+alembic revision --autogenerate -m "Initial migration"
+alembic upgrade head
