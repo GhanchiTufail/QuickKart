@@ -89,3 +89,103 @@ Use **Alembic** for schema version control and applying changes safely:
 alembic init alembic
 alembic revision --autogenerate -m "Initial migration"
 alembic upgrade head
+
+# 🚀 QuickKart
+
+---
+
+## 🚀 Running the Project
+
+### 1. Clone the Repository
+
+git clone https://github.com/yourusername/QuickKart.git
+cd QuickKart
+
+### 2. Create Virtual Environment
+
+python -m venv env
+source env/bin/activate # On Windows: env\Scripts\activate
+
+
+### 3. Install Dependencies
+
+pip install -r requirements.txt
+
+
+### 4. Configure Environment Variables
+
+Create a `.env` file in the root directory:
+
+env
+DATABASE_URL=postgresql://username:password@localhost/quickkart
+SECRET_KEY=your_secret_key
+CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
+
+
+
+### 5. Run the Server
+
+uvicorn source.main:app --reload
+
+
+
+---
+
+## 🧪 Testing the API
+
+Access Swagger UI at:  
+[http://localhost:8000/docs](http://localhost:8000/docs)
+
+Access ReDoc at:  
+[http://localhost:8000/redoc](http://localhost:8000/redoc)
+
+Both are auto-generated and interactive API docs powered by FastAPI.
+
+---
+
+## 🚧 Future Enhancements
+
+- 🧾 Integration with a payment gateway (Stripe, Razorpay)  
+- ⭐ Product reviews and rating system  
+- 🛒 Wishlist functionality  
+- 📦 Order history and tracking for customers  
+- 📊 Admin dashboard with insights and analytics  
+
+---
+
+## 🤝 Contributing
+
+Fork the repository
+
+Create your feature branch:  
+git checkout -b feature/YourFeatureName
+
+
+
+Commit your changes:  
+git commit -m 'Add YourFeatureName'
+
+
+
+Push to the branch:  
+git push origin feature/YourFeatureName
+
+
+
+Open a pull request
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License – see the LICENSE file for details.
+
+---
+
+## 🙌 Acknowledgements
+
+- FastAPI Documentation  
+- Cloudinary  
+- SQLAlchemy  
+- Alembic  
+- PostgreSQL
