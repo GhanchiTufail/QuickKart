@@ -184,8 +184,9 @@ This project is licensed under the MIT License – see the LICENSE file for deta
 
 ## 🙌 Acknowledgements
 
-- FastAPI Documentation  
-- Cloudinary  
-- SQLAlchemy  
-- Alembic  
-- PostgreSQL
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)  
+- [Cloudinary](https://cloudinary.com/)  
+- [SQLAlchemy](https://www.sqlalchemy.org/)  
+- [Alembic](https://alembic.sqlalchemy.org/)  
+- [PostgreSQL](https://www.postgresql.org/)
+
