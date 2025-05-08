@@ -1,15 +1,15 @@
 # 🛒 QuickKart
-## QuickKart is a feature-rich, full-stack E-commerce web application built with FastAPI for the backend and HTML, CSS, JavaScript for the frontend. It supports multiple user roles—Admin, Seller, and Customer—each with their own set of features and privileges. QuickKart is designed to be lightweight, secure, and scalable.
+#### QuickKart is a feature-rich, full-stack E-commerce web application built with FastAPI for the backend and HTML, CSS, JavaScript for the frontend. It supports multiple user roles—Admin, Seller, and Customer—each with their own set of features and privileges. QuickKart is designed to be lightweight, secure, and scalable.
 
-🔧 Tech Stack
-🖥 Backend
-FastAPI – High-performance API framework for building RESTful services.
+## 🔧 Tech Stack
+### 🖥 Backend
+#### FastAPI – High-performance API framework for building RESTful services.
 
-SQLAlchemy – ORM for database interaction.
+#### SQLAlchemy – ORM for database interaction.
 
-Alembic – Database migrations.
+#### Alembic – Database migrations.
 
-PostgreSQL – Relational database for data storage.
+#### PostgreSQL – Relational database for data storage.
 
 psycopg2 – PostgreSQL database adapter.
 
