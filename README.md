@@ -85,7 +85,7 @@ QuickKart is a feature-rich **E-commerce platform** developed using **FastAPI** 
 
 Use **Alembic** for schema version control and applying changes safely:
 
-```bash
+
 alembic init alembic
 alembic revision --autogenerate -m "Initial migration"
 alembic upgrade head
