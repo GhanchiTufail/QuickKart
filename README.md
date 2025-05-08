@@ -1,5 +1,5 @@
 # 🛒 QuickKart
-QuickKart is a feature-rich, full-stack E-commerce web application built with FastAPI for the backend and HTML, CSS, JavaScript for the frontend. It supports multiple user roles—Admin, Seller, and Customer—each with their own set of features and privileges. QuickKart is designed to be lightweight, secure, and scalable.
+## QuickKart is a feature-rich, full-stack E-commerce web application built with FastAPI for the backend and HTML, CSS, JavaScript for the frontend. It supports multiple user roles—Admin, Seller, and Customer—each with their own set of features and privileges. QuickKart is designed to be lightweight, secure, and scalable.
 
 🔧 Tech Stack
 🖥 Backend
