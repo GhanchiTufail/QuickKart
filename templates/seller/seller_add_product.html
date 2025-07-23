@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <style>
+        /* === General Styles === */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #333;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* === Sidebar === */
+        .sidebar {
+            width: 250px;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .sidebar ul li a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        .sidebar ul li.primary a {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+        }
+
+        /* === Main Content === */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* === Form Styles === */
+        .product-form {
+            width: 100%;
+            max-width: 600px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-actions {
+            margin-top: 30px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+        .btn-cancel {
+            background: #f44336;
+            margin-left: 10px;
+        }
+        .btn-cancel:hover {
+            background: #d32f2f;
+        }
+
+        /* === Dropdown Styles === */
+        select {
+            appearance: none;
+            background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")
+                no-repeat right 12px center;
+            background-size: 16px;
+            padding: 10px 36px 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Conditional field */
+        #dailyRateGroup {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- === Sidebar === -->
+    <div class="sidebar">
+        <h2>{{seller.name}}</h2>
+        <ul>
+            <li><a href="/seller/home">Dashboard</a></li>
+            <li><a href="/seller/profile">Profile</a></li>
+            <li class="primary"><a href="/seller/product">Products</a></li>
+            <li><a href="/seller/order">Orders</a></li>
+            <li><a href="/seller/login">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- === Main Content === -->
+    <div class="main-content">
+        <h1>Add New Product</h1>
+
+        <form method="post" action="/seller/product/add" class="product-form" enctype="multipart/form-data">
+            <!-- Product Name -->
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+
+            <!-- Image -->
+            <div class="form-group">
+                <label for="image">Product Image</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" step="0.01" required>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+                <label for="category">Product Category</label>
+                <select id="category" name="category" required>
+                    <option value="" disabled selected>Choose a Category</option>
+                    {% for data in categories %}
+                    <option value="{{ data.value }}">{{ data.value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Stock -->
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <input type="number" id="stock" name="stock" required>
+            </div>
+
+            <!-- Is Rentable -->
+            <div class="form-group">
+                <label for="is_rentable">Is Rentable?</label>
+                <select id="is_rentable" name="is_rentable" required>
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+
+            <!-- Daily Rate (Conditional) -->
+            <div class="form-group" id="dailyRateGroup">
+                <label for="daily_rate">Daily Rate</label>
+                <input type="number" id="daily_rate" name="daily_rate" step="0.01">
+            </div>
+
+            <!-- Brand -->
+            <div class="form-group">
+                <label for="brand">Brand</label>
+                <input type="text" id="brand" name="brand" required>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn">Add Product</button>
+                <a href="/seller/product" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Show/hide daily rate field based on is_rentable selection
+        const isRentable = document.getElementById("is_rentable");
+        const dailyRateGroup = document.getElementById("dailyRateGroup");
+
+        // Set initial state based on default value
+        if (isRentable.value === "true") {
+            dailyRateGroup.style.display = "block";
+        } else {
+            dailyRateGroup.style.display = "none";
+        }
+        
+        // Add event listener for changes
+        isRentable.addEventListener("change", function() {
+            if (this.value === "true") {
+                dailyRateGroup.style.display = "block";
+            } else {
+                dailyRateGroup.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

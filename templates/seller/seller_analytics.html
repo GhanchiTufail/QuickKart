@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Analytics</title>
+    <style>
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 36px;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        .chart-placeholder {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 8px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Same sidebar -->
+    <div class="sidebar">
+        <h2>Seller Panel</h2>
+        <ul>
+            <li><a href="/seller/home">Dashboard</a></li>
+            <li><a href="/seller/profile">Profile</a></li>
+            <li><a href="/seller/product">Products</a></li>
+            <li><a href="/seller/order">Orders</a></li>
+            <li><a href="/seller/login">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>Store Analytics</h1>
+        
+        <div class="analytics-grid">
+            <div class="stat-card">
+                <h3>Total Sales</h3>
+                <div class="stat-value">$12,345</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <div class="stat-value">89</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Products</h3>
+                <div class="stat-value">45</div>
+            </div>
+        </div>
+
+        <div class="chart-placeholder">
+            Sales Chart (Integration with Chart.js would go here)
+        </div>
+    </div>
+</body>
+</html>
